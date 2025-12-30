@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/pm_tests.dir/tests/test_placeholder.cpp.o -o pm_tests  libpolymarket_core.a 

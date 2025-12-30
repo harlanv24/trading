@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/harlan/trading/build",
+  "command": "/usr/bin/c++  -I/home/harlan/trading/include -std=c++20 -o CMakeFiles/polymarket_core.dir/src/core_placeholder.cpp.o -c /home/harlan/trading/src/core_placeholder.cpp",
+  "file": "/home/harlan/trading/src/core_placeholder.cpp",
+  "output": "CMakeFiles/polymarket_core.dir/src/core_placeholder.cpp.o"
+},
+{
+  "directory": "/home/harlan/trading/build",
+  "command": "/usr/bin/c++  -I/home/harlan/trading/include -std=c++20 -o CMakeFiles/pm_cli.dir/src/cli/main.cpp.o -c /home/harlan/trading/src/cli/main.cpp",
+  "file": "/home/harlan/trading/src/cli/main.cpp",
+  "output": "CMakeFiles/pm_cli.dir/src/cli/main.cpp.o"
+},
+{
+  "directory": "/home/harlan/trading/build",
+  "command": "/usr/bin/c++  -I/home/harlan/trading/include -std=c++20 -o CMakeFiles/pm_tests.dir/tests/test_placeholder.cpp.o -c /home/harlan/trading/tests/test_placeholder.cpp",
+  "file": "/home/harlan/trading/tests/test_placeholder.cpp",
+  "output": "CMakeFiles/pm_tests.dir/tests/test_placeholder.cpp.o"
+}
+]

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libpolymarket_core.a CMakeFiles/polymarket_core.dir/src/core_placeholder.cpp.o
+/usr/bin/ranlib libpolymarket_core.a
