@@ -5,14 +5,14 @@
 #include <chrono>
 #include <thread>
 
-struct SystemClock : IClock {
+struct SteadyClock : IClock {
     Timestamp now() const override {
         return Timestamp{std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::system_clock::now().time_since_epoch())};
+            std::chrono::steady_clock::now().time_since_epoch())};
     }
 
     void sleep_until(Timestamp t) override {
-        using Clock = std::chrono::system_clock;
+        using Clock = std::chrono::steady_clock;
         std::this_thread::sleep_until(
             std::chrono::time_point<Clock, std::chrono::nanoseconds>(t.ns()));
     }

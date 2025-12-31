@@ -14,38 +14,38 @@
 - JSONL reader/writer uses RapidJSON for speed; JSON confined to the IO boundary.
 
 ## Task List (Commit-Sized)
-1) Project skeleton (CMake + layout + CLI stub)
+- [x] 1) Project skeleton (CMake + layout + CLI stub)
    - Add core library, CLI, and tests targets
    - Create include/ and src/ subfolders per module
    - CLI prints a stub message
-2) Core types: identifiers and side
+- [x] 2) Core types: identifiers and side
    - Define Side enum (bid/ask)
    - Define MarketId, OrderId, TradeId types (string or integer aliases)
    - Add a small header-only test for type usage (compile-only)
-3) Core types: price/size and math
+- [x] 3) Core types: price/size and math
    - Define Price and Size types (integer ticks or decimal wrapper)
    - Decide and document numeric representation in SCHEMA.md
-4) Core time types
+- [x] 4) Core time types
    - Define Timestamp (nanoseconds since epoch)
    - Define Duration (nanoseconds)
-5) Clock interface
+- [x] 5) Clock interface
    - IClock interface with now() and sleep_until()
-6) System clock implementation
+- [x] 6) System clock implementation
    - SystemClock uses std::chrono::system_clock
-7) Monotonic clock implementation
+- [x] 7) Monotonic clock implementation
    - SteadyClock uses std::chrono::steady_clock for capture_ns ordering
-8) Replay clock implementation
+- [x] 8) Replay clock implementation
    - ReplayClock advances based on event timestamps
-   - [TODO] Support "as-fast-as-possible" mode
-9) Event schema: types and structures
+   - Support "as-fast-as-possible" mode
+- [x] 9) Event schema: types and structures
    - MarketEvent variant with record_meta, snapshot, delta, trade, resync, heartbeat
    - Define shared event fields and per-event payloads
-10) Schema documentation sync
+- [x] 10) Schema documentation sync
    - Update SCHEMA.md with exact field types and examples
-11) JSONL writer
+- [x] 11) JSONL writer
    - Append-only writer, stable field ordering
    - Write record_meta and sample events
-12) JSONL writer tests
+- [x] 12) JSONL writer tests
    - Serialize a sample event and assert JSON content
 13) JSONL reader
    - Streaming reader that yields MarketEvent
