@@ -8,6 +8,7 @@
 #include "core/size.h"
 #include "core/time.h"
 #include <chrono>
+#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <optional>
@@ -21,6 +22,7 @@ std::string ReadFile(const std::string &path) {
 
 int main() {
     const std::string path = "/tmp/jsonl_writer_sanity.jsonl";
+    std::remove(path.c_str());
     {
         JsonlWriter writer(path);
 
@@ -44,7 +46,6 @@ int main() {
         delta.recv_ts = Timestamp(std::chrono::nanoseconds(3'000));
         delta.capture_ns = Timestamp(std::chrono::nanoseconds(4'000));
         delta.exchange_ts = std::nullopt;
-        delta.neg_risk = std::nullopt;
         delta.side = Side::Bid;
         delta.price = Price(105);
         delta.size = Size(250);

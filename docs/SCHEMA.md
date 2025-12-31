@@ -60,7 +60,6 @@ Fields:
 - exchange_ts (optional)
 - recv_ts
 - capture_ns
-- neg_risk: boolean (optional)
 - side: "bid" | "ask"
 - price_ticks: int64
 - size_ticks: int64 (0 deletes the level)
@@ -72,7 +71,12 @@ Fields:
 - event_type: "trade"
 - session_id
 - market_id
-- TODO: not defined yet (struct stub exists)
+- exchange_ts (optional)
+- recv_ts
+- capture_ns
+- side: "bid" | "ask" (aggressor)
+- price_ticks: int64
+- size_ticks: int64
 
 ## resync
 Marks a gap or reset, and indicates that a new snapshot was fetched.
@@ -81,7 +85,10 @@ Fields:
 - event_type: "resync"
 - session_id
 - market_id
-- TODO: not defined yet (struct stub exists)
+- recv_ts
+- capture_ns
+- exchange_ts (optional)
+- reason: string (optional)
 
 ## heartbeat
 Optional marker to record capture gaps or keepalive timing.
@@ -90,7 +97,9 @@ Fields:
 - event_type: "heartbeat"
 - session_id
 - market_id
-- TODO: not defined yet (struct stub exists)
+- recv_ts
+- capture_ns
+- note: string (optional)
 
 ## Ordering Rules
 - Primary ordering: capture_ns

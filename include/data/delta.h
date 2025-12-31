@@ -12,7 +12,6 @@ struct Delta {
     Timestamp recv_ts;
     Timestamp capture_ns;
     std::optional<Timestamp> exchange_ts;
-    std::optional<bool> neg_risk;
     Side side;
     Price price;
     Size size;

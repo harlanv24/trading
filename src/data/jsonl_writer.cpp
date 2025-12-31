@@ -1,17 +1,18 @@
 #define RAPIDJSON_HAS_STDSTRING 1
 
-#include "book/order_book.h"
-#include "data/delta.h"
-#include "data/heartbeat.h"
-#include "data/resync.h"
-#include "data/snapshot.h"
-
-#include "core/ids.h"
-#include "data/event_type.h"
 #include "data/jsonl_writer.h"
+#include "book/order_book.h"
+#include "core/ids.h"
+#include "data/delta.h"
+#include "data/event_type.h"
+#include "data/heartbeat.h"
 #include "data/market_event.h"
 #include "data/record_meta.h"
+#include "data/resync.h"
+#include "data/snapshot.h"
+#include "data/trade.h"
 #include <ios>
+#include <optional>
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
@@ -28,7 +29,6 @@ const char *kMarketId = "market_id";
 const char *kRecvTs = "recv_ts";
 const char *kCaptureNs = "capture_ns";
 const char *kExchangeTs = "exchange_ts";
-const char *kNegRisk = "neg_risk";
 }; // namespace
 
 JsonlWriter::JsonlWriter(const std::string &path) : out_(path, std::ios::app | std::ios::binary) {
@@ -79,7 +79,7 @@ const char *SideToString(const Side &s) {
 
 void WriteCommonFields(RapidWriter &w, const SessionId &sid, const MarketId &mid,
                        std::optional<Timestamp> exchange_ts, Timestamp recv_ts,
-                       Timestamp capture_ns, std::optional<bool> neg_risk) {
+                       Timestamp capture_ns) {
     w.Key(StringRef(kSessionId));
     w.String(StringRef(sid.value));
     w.Key(StringRef(kMarketId));
@@ -92,10 +92,6 @@ void WriteCommonFields(RapidWriter &w, const SessionId &sid, const MarketId &mid
     w.Int64(recv_ts.ns().count());
     w.Key(StringRef(kCaptureNs));
     w.Int64(capture_ns.ns().count());
-    if (neg_risk) {
-        w.Key(StringRef(kNegRisk));
-        w.Bool(*neg_risk);
-    }
 }
 
 void JsonlWriter::write(const MarketEvent &e) {
@@ -129,8 +125,12 @@ void JsonlWriter::write(const MarketEvent &e) {
     }
     case EventType::Snapshot: {
         const auto &p = std::get<Snapshot>(e.payload);
-        WriteCommonFields(writer, p.session_id, p.market_id, p.exchange_ts, p.recv_ts, p.capture_ns,
-                          p.neg_risk);
+        WriteCommonFields(writer, p.session_id, p.market_id, p.exchange_ts, p.recv_ts,
+                          p.capture_ns);
+        if (p.neg_risk) {
+            writer.Key("neg_risk");
+            writer.Bool(*p.neg_risk);
+        }
         writer.Key("bids");
         writer.StartArray();
         for (const auto &level : p.book_state.bids) {
@@ -161,8 +161,8 @@ void JsonlWriter::write(const MarketEvent &e) {
     }
     case EventType::Delta: {
         const auto &p = std::get<Delta>(e.payload);
-        WriteCommonFields(writer, p.session_id, p.market_id, p.exchange_ts, p.recv_ts, p.capture_ns,
-                          p.neg_risk);
+        WriteCommonFields(writer, p.session_id, p.market_id, p.exchange_ts, p.recv_ts,
+                          p.capture_ns);
         writer.Key("side");
         writer.String(SideToString(p.side));
         writer.Key("price_ticks");
@@ -172,15 +172,36 @@ void JsonlWriter::write(const MarketEvent &e) {
         break;
     }
     case EventType::Trade: {
-        // TODO: Fill in rest of Trade serialization once schema is finalized
+        const auto &p = std::get<Trade>(e.payload);
+        WriteCommonFields(writer, p.session_id, p.market_id, p.exchange_ts, p.recv_ts,
+                          p.capture_ns);
+        writer.Key("side");
+        writer.String(SideToString(p.side));
+        writer.Key("price_ticks");
+        writer.Int64(p.price.ticks());
+        writer.Key("size_ticks");
+        writer.Int64(p.size.ticks());
         break;
     }
     case EventType::Resync: {
-        // TODO: Fill in rest of Resync serialization once schema is finalized
+        const auto &p = std::get<Resync>(e.payload);
+        WriteCommonFields(writer, p.session_id, p.market_id, p.exchange_ts, p.recv_ts,
+                          p.capture_ns);
+        if (p.reason) {
+            writer.Key("reason");
+            writer.String(StringRef(*p.reason));
+        }
         break;
     }
     case EventType::Heartbeat: {
-        // TODO: Fill in rest of Heartbeat serialization once schema is finalized
+        const auto &p = std::get<Heartbeat>(e.payload);
+        WriteCommonFields(writer, p.session_id, p.market_id, p.exchange_ts, p.recv_ts,
+                          p.capture_ns);
+        if (p.note) {
+            writer.Key("note");
+            writer.String(StringRef(*p.note));
+        }
+
         break;
     }
     }
