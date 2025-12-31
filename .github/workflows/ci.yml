@@ -23,4 +23,4 @@ jobs:
         run: cmake --build build --config Release -- -j 2
 
       - name: Test
-        run: ctest --test-dir build --output-on-failure --config Release
+        run: ctest --test-dir build --output-on-failure
