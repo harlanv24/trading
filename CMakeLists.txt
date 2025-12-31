@@ -10,6 +10,7 @@ option(PMS_BUILD_TESTS "Build tests" ON)
 
 add_library(polymarket_core
   src/core_placeholder.cpp
+  src/data/jsonl_writer.cpp
 )
 
 target_include_directories(polymarket_core
@@ -30,7 +31,7 @@ target_link_libraries(pm_cli
 if(PMS_BUILD_TESTS)
   enable_testing()
   add_executable(pm_tests
-    tests/test_placeholder.cpp
+    tests/jsonl_writer_sanity.cpp
   )
   target_link_libraries(pm_tests PRIVATE polymarket_core)
   add_test(NAME pm_tests COMMAND pm_tests)
