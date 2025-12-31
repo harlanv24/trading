@@ -17,3 +17,7 @@ struct TradeId {
 struct SessionId {
     std::string value;
 };
+
+struct RecorderVersion {
+    std::string value;
+};

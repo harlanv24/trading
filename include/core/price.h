@@ -15,9 +15,7 @@ inline constexpr int64_t kPriceScale = 1'000'000;
 
 struct Price {
     Price() : value(0) {}
-    explicit Price(int64_t ticks) : value(ticks) {
-        assert(value >= 0);
-    }
+    explicit Price(int64_t ticks) : value(ticks) {}
     int64_t ticks() const {
         return value;
     }
