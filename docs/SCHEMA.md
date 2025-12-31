@@ -46,9 +46,9 @@ Fields:
 - exchange_ts (if available)
 - recv_ts
 - capture_ns
+- neg_risk: boolean (optional)
 - bids: array of [price_ticks, size_ticks] (int64)
 - asks: array of [price_ticks, size_ticks] (int64)
-- neg_risk: boolean (optional)
 
 ## delta
 Incremental updates to price levels.

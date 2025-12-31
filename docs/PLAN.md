@@ -32,56 +32,58 @@
    - IClock interface with now() and sleep_until()
 6) System clock implementation
    - SystemClock uses std::chrono::system_clock
-7) Replay clock implementation
+7) Monotonic clock implementation
+   - SteadyClock uses std::chrono::steady_clock for capture_ns ordering
+8) Replay clock implementation
    - ReplayClock advances based on event timestamps
    - [TODO] Support "as-fast-as-possible" mode
-8) Event schema: types and structures
+9) Event schema: types and structures
    - MarketEvent variant with record_meta, snapshot, delta, trade, resync, heartbeat
    - Define shared event fields and per-event payloads
-9) Schema documentation sync
+10) Schema documentation sync
    - Update SCHEMA.md with exact field types and examples
-10) JSONL writer
+11) JSONL writer
    - Append-only writer, stable field ordering
    - Write record_meta and sample events
-11) JSONL writer tests
+12) JSONL writer tests
    - Serialize a sample event and assert JSON content
-12) JSONL reader
+13) JSONL reader
    - Streaming reader that yields MarketEvent
    - Detect unknown event_type and return error
-13) JSONL reader tests
+14) JSONL reader tests
    - Round-trip event -> JSONL -> event
-14) Order book core
+15) Order book core
    - Apply snapshot and deltas
    - Track best bid/ask and depth size
-15) Order book tests
+16) Order book tests
    - Known snapshot + deltas -> expected best bid/ask
-16) Replay engine core
+17) Replay engine core
    - Replay loop consumes events and updates book
    - Emits callbacks to strategy and simulator
-17) Strategy interface
+18) Strategy interface
    - Callbacks: on_start/on_book/on_trade/on_fill/on_end
-18) Sample strategy
+19) Sample strategy
    - Minimal strategy that logs best bid/ask or spread
-19) Execution simulator core
+20) Execution simulator core
    - Submit order API and fixed latency model
    - Top-of-book fills only
-20) PnL/position accounting
+21) PnL/position accounting
    - Positions per side and realized/unrealized PnL
-21) Simulator tests
+22) Simulator tests
    - Deterministic fill results for a known book sequence
-22) Recorder: REST snapshot
+23) Recorder: REST snapshot
    - Fetch snapshot and normalize into snapshot event
-23) Recorder: WS market channel
+24) Recorder: WS market channel
    - Subscribe to deltas and trades; normalize to events
-24) Rolling log management
+25) Rolling log management
    - Append-only JSONL, new record_meta per session
-25) CLI: record
+26) CLI: record
    - Start recorder and write rolling log
-26) CLI: replay
+27) CLI: replay
    - Run replay engine against a JSONL log
-27) CLI: book-rebuild
+28) CLI: book-rebuild
    - Replay and print best bid/ask timeline
-28) CLI: paper
+29) CLI: paper
    - Live WS/REST + simulator only (no real trades)
 
 ## MVP: Record + Replay + Toy Simulation
