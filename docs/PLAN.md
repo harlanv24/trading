@@ -34,7 +34,7 @@
    - SystemClock uses std::chrono::system_clock
 7) Replay clock implementation
    - ReplayClock advances based on event timestamps
-   - Support “as-fast-as-possible” mode
+   - [TODO] Support "as-fast-as-possible" mode
 8) Event schema: types and structures
    - MarketEvent variant with record_meta, snapshot, delta, trade, resync, heartbeat
    - Define shared event fields and per-event payloads

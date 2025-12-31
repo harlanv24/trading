@@ -7,7 +7,6 @@ Each line is one JSON object. The log is append-only. A rolling log contains mul
 - event_type: string (record_meta, snapshot, delta, trade, resync, heartbeat)
 - session_id: string (UUID or timestamp-based)
 - market_id: string
-- seq: integer (monotonic sequence if provided)
 - exchange_ts: integer (nanoseconds since epoch, optional)
 - recv_ts: integer (nanoseconds since epoch, local wall clock)
 - capture_ns: integer (monotonic capture time for tie-break ordering)
@@ -21,7 +20,7 @@ Fields:
 - market_id
 - recorder_version
 - start_ts (recv_ts)
-- config: { rest_base_url, ws_url, snapshot_interval_seconds }
+- config: { rest_url, ws_url, snapshot_interval_seconds }
 
 Example:
 {
@@ -31,7 +30,7 @@ Example:
   "recorder_version": "0.1.0",
   "start_ts": 1735689600000000000,
   "config": {
-    "rest_base_url": "https://example",
+    "rest_url": "https://example",
     "ws_url": "wss://example",
     "snapshot_interval_seconds": 30
   }
@@ -44,13 +43,12 @@ Fields:
 - event_type: "snapshot"
 - session_id
 - market_id
-- seq (if available)
 - exchange_ts (if available)
 - recv_ts
 - capture_ns
-- bids: array of [price, size]
-- asks: array of [price, size]
-- snapshot_id: string (optional)
+- bids: array of [price_ticks, size_ticks] (int64)
+- asks: array of [price_ticks, size_ticks] (int64)
+- neg_risk: boolean (optional)
 
 ## delta
 Incremental updates to price levels.
@@ -59,12 +57,13 @@ Fields:
 - event_type: "delta"
 - session_id
 - market_id
-- seq
 - exchange_ts (optional)
 - recv_ts
 - capture_ns
-- bids: array of [price, size] (size=0 to delete)
-- asks: array of [price, size] (size=0 to delete)
+- neg_risk: boolean (optional)
+- side: "bid" | "ask"
+- price_ticks: int64
+- size_ticks: int64 (0 deletes the level)
 
 ## trade
 Trade prints as reported by the venue.
@@ -73,13 +72,7 @@ Fields:
 - event_type: "trade"
 - session_id
 - market_id
-- trade_id: string (if provided)
-- side: "buy" | "sell" (if provided)
-- price: number
-- size: number
-- exchange_ts (optional)
-- recv_ts
-- capture_ns
+- TODO: not defined yet (struct stub exists)
 
 ## resync
 Marks a gap or reset, and indicates that a new snapshot was fetched.
@@ -88,9 +81,7 @@ Fields:
 - event_type: "resync"
 - session_id
 - market_id
-- reason: string (e.g., "gap_detected")
-- recv_ts
-- capture_ns
+- TODO: not defined yet (struct stub exists)
 
 ## heartbeat
 Optional marker to record capture gaps or keepalive timing.
@@ -99,17 +90,17 @@ Fields:
 - event_type: "heartbeat"
 - session_id
 - market_id
-- recv_ts
-- capture_ns
+- TODO: not defined yet (struct stub exists)
 
 ## Ordering Rules
-- Primary ordering: seq (when present)
-- Tie-breaker: capture_ns
+- Primary ordering: capture_ns
+- Tie-breaker: recv_ts (or ingress order if identical)
 - Never reorder by exchange_ts
 
 ## Market Type (MVP)
 - Single market type only for MVP.
 - Price/size stored as integer ticks (scaled); encoded as JSON integers for deterministic replay.
+- Scale: 1e6 ticks per unit (see `kPriceScale`, `kSizeScale`).
 
 ## Implementation Notes
 - JSONL reader/writer uses RapidJSON for speed.
