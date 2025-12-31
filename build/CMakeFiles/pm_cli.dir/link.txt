@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/pm_cli.dir/src/cli/main.cpp.o -o pm_cli  libpolymarket_core.a 

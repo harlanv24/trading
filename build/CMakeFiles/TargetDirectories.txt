@@ -1,6 +1,0 @@
-/home/harlan/trading/build/CMakeFiles/polymarket_core.dir
-/home/harlan/trading/build/CMakeFiles/pm_cli.dir
-/home/harlan/trading/build/CMakeFiles/pm_tests.dir
-/home/harlan/trading/build/CMakeFiles/test.dir
-/home/harlan/trading/build/CMakeFiles/edit_cache.dir
-/home/harlan/trading/build/CMakeFiles/rebuild_cache.dir
